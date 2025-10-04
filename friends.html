@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kyowavers | Friends</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+</head>
+<body>
+  <header class="page-header">
+    <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back</a>
+    <h1>Friends</h1>
+  </header>
+
+  <main class="friends-container" id="friendsContainer">
+    <p>Loading friends...</p>
+  </main>
+
+  <footer>
+    <p>© 2025 Kyowavers · Made with 💙 for unity & culture.</p>
+  </footer>
+
+  <div class="nav-container">
+    <ul class="nav">
+      <li class="nav-item" data-index="0">
+        <a href="index.html">
+          <span class="icon"><i class="fa-solid fa-house"></i></span>
+          <span class="text">Home</span>
+        </a>
+      </li>
+      <li class="nav-item" data-index="1">
+        <a href="friends.html">
+          <span class="icon"><i class="fa-solid fa-users"></i></span>
+          <span class="text">Friends</span>
+        </a>
+      </li>
+      <li class="nav-item" data-index="2">
+        <a href="chat.html">
+          <span class="icon"><i class="fa-solid fa-comment-dots"></i></span>
+          <span class="text">Chat</span>
+        </a>
+      </li>
+      <li class="nav-item" data-index="3">
+        <a href="gallery.html">
+          <span class="icon"><i class="fa-solid fa-camera"></i></span>
+          <span class="text">Gallery</span>
+        </a>
+      </li>
+      <li class="nav-item" data-index="4">
+        <a href="schedule.html">
+          <span class="icon"><i class="fa-solid fa-calendar"></i></span>
+          <span class="text">Schedule</span>
+        </a>
+      </li>
+      <div class="indicator"></div>
+    </ul>
+  </div>
+
+  <script>
+    const navItems = document.querySelectorAll('.nav-item');
+    const indicator = document.querySelector('.indicator');
+
+    navItems.forEach((item, i) => {
+      item.addEventListener('mouseenter', () => {
+        const moveX = i * 74;
+        indicator.style.transform = `translateX(${moveX}px)`;
+      });
+    });
+  </script>
+
+<script>
+    fetch('friends.json')
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById('friendsContainer');
+        container.innerHTML = '';
+  
+        data.forEach(friend => {
+          const card = document.createElement('div');
+          card.className = 'friend-card';
+          card.innerHTML = `
+            <img src="${friend.photo}" alt="${friend.name}" />
+            <h3>${friend.name}</h3>
+            <p>${friend.university}</p>
+          `;
+          container.appendChild(card);
+        });
+      })
+      .catch(err => {
+        document.getElementById('friendsContainer').innerHTML = "<p>Failed to load friends.</p>";
+        console.error('Error:', err);
+      });
+  </script>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
+  
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyAknoZTRZOe24YwSqBg0Wlv_9Kjzt8jMxg",
+  authDomain: "kyowaversfriends.firebaseapp.com",
+  projectId: "kyowaversfriends",
+  storageBucket: "kyowaversfriends.firebasestorage.app",
+  messagingSenderId: "445144081451",
+  appId: "1:445144081451:web:3bee72daa9c639545db66e",
+  measurementId: "G-TNW4D1FKEH"
+};
+  
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+  
+    window.db = db;
+    window.addDoc = addDoc;
+    window.getDocs = getDocs;
+    window.collection = collection;
+  </script>
+</body>
+</html>

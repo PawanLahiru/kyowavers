@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Kyowavers • Schedule</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="style.cs" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <style>
+        :root {
+            --brand: #0b7dbb;
+            --ok: #18a957;
+            --bg: #f6f7fb;
+            --card: #ffffff;
+            --muted: #98a2b3;
+            --border: #e6e8ee;
+        }
+
+        body {
+            background: var(--bg);
+            margin: 0;
+            font-family: system-ui, Arial, sans-serif;
+        }
+
+        .wrap {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .page-header {
+            background: linear-gradient(90deg, #1da1f2, #0b7dbb);
+            color: #fff;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-radius: 0 0 12px 12px;
+        }
+
+        .page-header a {
+            color: #fff;
+            text-decoration: none;
+            opacity: .9
+        }
+
+        .page-header h1 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 22px
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: 0 10px 25px rgba(20, 30, 60, .06);
+            padding: 18px;
+            margin-top: 18px;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap
+        }
+
+        .controls .event-title {
+            font-weight: 700;
+            font-size: 18px;
+            flex: 1
+        }
+
+        .controls .month-nav {
+            display: flex;
+            align-items: center;
+            gap: 6px
+        }
+
+        .controls .btn {
+            border: 1px solid var(--border);
+            background: #fff;
+            padding: 8px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        /* Calendar grid */
+        .cal {
+            margin-top: 12px;
+        }
+
+        .cal .dow {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            padding: 6px 2px;
+            color: var(--muted);
+            font-weight: 600;
+            font-size: 12px
+        }
+
+        .cal .grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px
+        }
+
+        .day {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            min-height: 92px;
+            padding: 10px;
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            transition: box-shadow .15s;
+        }
+
+        .day:hover {
+            box-shadow: 0 10px 18px rgba(10, 20, 40, .07)
+        }
+
+        .day .dnum {
+            font-weight: 700;
+            font-size: 14px
+        }
+
+        .day .count {
+            font-size: 12px;
+            color: var(--muted)
+        }
+
+        .day .names {
+            margin-top: auto;
+            font-size: 11px;
+            color: #606
+        }
+
+        .day.inactive {
+            background: #fafafa;
+            color: #bbb;
+            cursor: default
+        }
+
+        .day.selected {
+            outline: 2px solid var(--brand)
+        }
+
+        .day.best {
+            box-shadow: 0 0 0 2px var(--ok) inset
+        }
+
+        .legend {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 10px
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: #fff;
+        }
+
+        .pill .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%
+        }
+
+        .dot.me {
+            background: var(--brand)
+        }
+
+        .dot.best {
+            background: var(--ok)
+        }
+
+        /* Bottom bar (choose name + info) */
+        .bar {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .bar input[type="text"] {
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            min-width: 220px;
+            flex: 1;
+        }
+
+        .bar .save-note {
+            font-size: 12px;
+            color: var(--muted)
+        }
+
+        .hint {
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 6px
+        }
+
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 1rem;
+    background-color: #e0e0e0;
+    font-size: 0.95rem;
+    margin-bottom: 60px; /* Leave space for nav bar */
+  }
+  
+  /* Floating bottom nav *//* Vertical left nav */
+.nav-container {
+  position: fixed;
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.036); /* transparent white */
+  backdrop-filter: blur(15px); /* glass effect */
+  -webkit-backdrop-filter: blur(15px); /* for Safari */
+  border-radius: 20px;
+  width: 80px;
+  height: auto;
+  padding: 10px 0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 9999;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-item {
+  width: 74px;
+  height: 74px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.nav-item a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-decoration: none;
+  color: #555;
+  font-size: 13px;
+}
+
+.icon {
+  font-size: 20px;
+  transition: 0.3s ease;
+}
+
+.nav-item:hover .icon {
+  color: #00b4d8;
+  transform: translateY(-5px);
+}
+
+.indicator {
+  position: absolute;
+  left: -20px;
+  width: 60px;
+  height: 60px;
+  background: #00b4d8;
+  border-radius: 50%;
+  border: 6px solid white;
+  transition: 0.3s ease;
+  z-index: -1;
+}
+
+/* Adjust indicator positions for vertical layout */
+.nav-container ul li:nth-child(2).active ~ .indicator {
+  transform: translateY(74px);
+}
+.nav-container ul li:nth-child(3).active ~ .indicator {
+  transform: translateY(148px);
+}
+.nav-container ul li:nth-child(4).active ~ .indicator {
+  transform: translateY(222px);
+}
+.nav-container ul li:nth-child(5).active ~ .indicator {
+  transform: translateY(296px);
+}
+
+    </style>
+</head>
+
+<body>
+
+    <header class="page-header">
+        <a href="index.html"><i class="fa-solid fa-arrow-left"></i> Back</a>
+        <h1>Schedule</h1>
+    </header>
+
+    <div class="wrap">
+        <div class="card">
+            <div class="controls">
+                <div class="event-title" id="eventTitle">Kyowavers Meetup</div>
+                <div class="month-nav">
+                    <button class="btn" id="prevBtn" title="Previous Month"><i
+                            class="fa-solid fa-chevron-left"></i></button>
+                    <div id="monthLabel" style="min-width:160px; text-align:center; font-weight:700;"></div>
+                    <button class="btn" id="nextBtn" title="Next Month"><i
+                            class="fa-solid fa-chevron-right"></i></button>
+                </div>
+            </div>
+
+            <div class="legend">
+                <span class="pill"><span class="dot me"></span> You’re available</span>
+                <span class="pill"><span class="dot best"></span> Best date (max people)</span>
+            </div>
+
+            <div class="cal">
+                <div class="dow">
+                    <div>Sun</div>
+                    <div>Mon</div>
+                    <div>Tue</div>
+                    <div>Wed</div>
+                    <div>Thu</div>
+                    <div>Fri</div>
+                    <div>Sat</div>
+                </div>
+                <div class="grid" id="calGrid"></div>
+            </div>
+
+            <div class="bar">
+                <input id="username" type="text" placeholder="Your name (save once)" />
+                <span class="save-note">Tip: we’ll remember your name on this device.</span>
+            </div>
+            <div class="hint">Click any date to toggle your availability. The most popular date is highlighted in green.
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+    import {
+      getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot,
+      arrayUnion, arrayRemove, collection
+    } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+
+    // TODO: replace with your real config
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "kyowaversfriends.firebaseapp.com",
+      projectId: "kyowaversfriends",
+      storageBucket: "kyowaversfriends.appspot.com",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "1:445144081451:web:3bee72daa9c639545db66e"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db  = getFirestore(app);
+
+    // ---- Simple event id (one poll). You can change this to multiple events if you want.
+    const EVENT_ID = "kyowavers-meetup";
+
+    // ---- State
+    let viewYear, viewMonth; // month is 0-11
+    let availability = {};   // { 'YYYY-MM-DD': ['name1','name2'] }
+    let bestDate = null;
+
+    // ---- Elements
+    const monthLabel = document.getElementById('monthLabel');
+    const grid       = document.getElementById('calGrid');
+    const nameInput  = document.getElementById('username');
+
+    // restore name
+    const savedName = localStorage.getItem('kw_name') || localStorage.getItem('chat_username') || '';
+    if (savedName) nameInput.value = savedName;
+    nameInput.addEventListener('change', () => {
+      localStorage.setItem('kw_name', nameInput.value.trim());
+    });
+
+    // helpers
+    const pad = n => String(n).padStart(2, '0');
+    const ymd = (d) => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+
+    // calc best date
+    function computeBest(){
+      let max = -1, winner = null;
+      Object.entries(availability).forEach(([date, users])=>{
+        const count = (users||[]).length;
+        if (count > max) { max = count; winner = date; }
+        else if (count === max && winner && date < winner) { winner = date; } // tie → earlier date
+      });
+      bestDate = winner;
+    }
+
+    // render month
+    function render(){
+      const first = new Date(viewYear, viewMonth, 1);
+      const startDay = first.getDay();
+      const lastDate = new Date(viewYear, viewMonth+1, 0).getDate();
+      const label = first.toLocaleString(undefined,{ month:'long', year:'numeric' });
+      monthLabel.textContent = label;
+      grid.innerHTML = '';
+
+      // cells before the first day
+      for(let i=0;i<startDay;i++){
+        const div = document.createElement('div');
+        div.className = 'day inactive';
+        grid.appendChild(div);
+      }
+      // month days
+      for(let d=1; d<=lastDate; d++){
+        const dateStr = `${viewYear}-${pad(viewMonth+1)}-${pad(d)}`;
+        const users = availability[dateStr] || [];
+        const div = document.createElement('div');
+        div.className = 'day';
+        if (bestDate === dateStr) div.classList.add('best');
+        const me = (nameInput.value||'').trim();
+        const iAmIn = me && users.includes(me);
+
+        div.innerHTML = `
+          <div class="dnum">${d}</div>
+          <div class="count">${users.length} available</div>
+          <div class="names">${users.slice(0,3).join(', ')}${users.length>3?'…':''}</div>
+        `;
+        if (iAmIn) div.classList.add('selected');
+
+        div.addEventListener('click', ()=> toggleAvailability(dateStr, iAmIn));
+        grid.appendChild(div);
+      }
+    }
+
+    // toggle availability for the current user
+    async function toggleAvailability(dateStr, isIn){
+      const me = (nameInput.value||'').trim();
+      if (!me) { alert('Enter your name first.'); nameInput.focus(); return; }
+      localStorage.setItem('kw_name', me);
+
+      const dateDoc = doc(db, 'events', EVENT_ID, 'dates', dateStr);
+      const snap = await getDoc(dateDoc);
+      if (!snap.exists()){
+        await setDoc(dateDoc, { users: isIn ? [] : [me] });
+      } else {
+        await updateDoc(dateDoc, { users: isIn ? arrayRemove(me) : arrayUnion(me) });
+      }
+    }
+
+    // live listener for the month in view
+    let unsub = null;
+    function watchMonth(){
+      if (unsub) unsub();
+      // Listen to *all* dates; small scale so OK. (We could query by range per month if needed.)
+      unsub = onSnapshot(collection(db,'events',EVENT_ID,'dates'), (qs)=>{
+        availability = {};
+        qs.forEach(docSnap=>{
+          const data = docSnap.data() || {};
+          availability[docSnap.id] = data.users || [];
+        });
+        computeBest();
+        render();
+      });
+    }
+
+    // month nav
+    document.getElementById('prevBtn').onclick = ()=>{ viewMonth--; if(viewMonth<0){viewMonth=11; viewYear--;} render(); };
+    document.getElementById('nextBtn').onclick = ()=>{ viewMonth++; if(viewMonth>11){viewMonth=0; viewYear++;} render(); };
+
+    // init
+    const now = new Date();
+    viewYear = now.getFullYear();
+    viewMonth = now.getMonth();
+    watchMonth();
+    render();
+  </script>
+
+    <!-- Bottom floating nav (optional – reuse your existing) -->
+    <div class="nav-container">
+        <ul class="nav">
+            <li class="nav-item" data-index="0"><a href="index.html"><span class="icon"><i
+                            class="fa-solid fa-house"></i></span><span class="text">Home</span></a></li>
+            <li class="nav-item" data-index="1"><a href="friends.html"><span class="icon"><i
+                            class="fa-solid fa-users"></i></span><span class="text">Friends</span></a></li>
+            <li class="nav-item" data-index="2"><a href="chat.html"><span class="icon"><i
+                            class="fa-solid fa-comment-dots"></i></span><span class="text">Chat</span></a></li>
+            <li class="nav-item" data-index="3"><a href="gallery.html"><span class="icon"><i
+                            class="fa-solid fa-camera"></i></span><span class="text">Gallery</span></a></li>
+            <li class="nav-item" data-index="4"><a href="schedule.html"><span class="icon"><i
+                            class="fa-solid fa-calendar"></i></span><span class="text">Schedule</span></a></li>
+            <div class="indicator"></div>
+        </ul>
+    </div>
+    <script>
+        const navItems = document.querySelectorAll('.nav-item');
+        const indicator = document.querySelector('.indicator');
+        navItems.forEach((item, i) => item.addEventListener('mouseenter', () => indicator.style.transform =
+            `translateX(${i*74}px)`));
+    </script>
+</body>
+
+</html>

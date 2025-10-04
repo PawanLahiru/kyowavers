@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Kyowavers | Gallery (Drive)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        :root {
+            --bg: #0b1324;
+            --card: #121b30cc;
+            --accent: #4cc9f0;
+            --accent2: #4895ef;
+            --text: #eaf2ff;
+            --muted: #9fb2d4;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            margin: 0;
+            background: linear-gradient(120deg, #0b1324, #142441);
+            color: var(--text);
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial
+        }
+
+        header {
+            padding: 14px 16px;
+            background: linear-gradient(90deg, #2a6bf2, #4cc9f0);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 18px;
+            letter-spacing: .2px
+        }
+
+        header .spacer {
+            flex: 1
+        }
+
+        header .btn {
+            background: #0d1b34;
+            border: 1px solid #26407a;
+            color: #cfe0ff;
+            padding: 8px 12px;
+            border-radius: 10px;
+            cursor: pointer
+        }
+
+        header .btn:hover {
+            filter: brightness(1.05)
+        }
+
+        .bar {
+            max-width: 1100px;
+            margin: 10px auto 0;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            padding: 0 16px;
+            flex-wrap: wrap
+        }
+
+        .pill {
+            background: #17233f;
+            border: 1px solid #213056;
+            color: var(--muted);
+            padding: 8px 12px;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .pill input[type="text"] {
+            background: transparent;
+            border: none;
+            color: #eaf2ff;
+            outline: none
+        }
+
+        .pill button {
+            background: var(--accent2);
+            color: #fff;
+            border: none;
+            border-radius: 999px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-weight: 600
+        }
+
+        .pill button:hover {
+            filter: brightness(1.08)
+        }
+
+        /* Tabs */
+        .tabs {
+            max-width: 1100px;
+            margin: 12px auto 0;
+            padding: 0 16px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+
+        .tab {
+            padding: 8px 12px;
+            border: 1px solid #2a3e6e;
+            border-radius: 999px;
+            cursor: pointer;
+            background: #0f1c35;
+            color: #cfe0ff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab.active {
+            background: #21407a;
+            border-color: #4cc9f0
+        }
+
+        .tab .close {
+            opacity: .7
+        }
+
+        .tab .close:hover {
+            opacity: 1
+        }
+
+        /* Grid */
+        .grid {
+            column-width: 260px;
+            column-gap: 16px;
+            max-width: 1100px;
+            margin: 16px auto 80px;
+            padding: 0 16px
+        }
+
+        .item {
+            break-inside: avoid;
+            margin: 0 0 16px;
+            position: relative;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #0e1a33;
+            border: 1px solid #1f2d53;
+            box-shadow: 0 10px 24px -12px rgba(0, 0, 0, .45);
+            cursor: pointer
+        }
+
+        .item img {
+            width: 100%;
+            display: block;
+            background: #0b1531;
+            aspect-ratio: 4/3;
+            object-fit: cover;
+            transition: transform .25s ease
+        }
+
+        .item:hover img {
+            transform: scale(1.02)
+        }
+
+        .item .meta {
+            position: absolute;
+            left: 8px;
+            bottom: 8px;
+            right: 8px;
+            background: linear-gradient(180deg, #0000, #0008);
+            padding: 6px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            color: #dfe7ff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+
+        .loader {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            color: var(--muted);
+            gap: 10px
+        }
+
+        .loader .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            animation: bump 1.2s infinite
+        }
+
+        .loader .dot:nth-child(2) {
+            animation-delay: .15s
+        }
+
+        .loader .dot:nth-child(3) {
+            animation-delay: .3s
+        }
+
+        @keyframes bump {
+
+            0%,
+            80%,
+            100% {
+                transform: scale(.6)
+            }
+
+            40% {
+                transform: scale(1)
+            }
+        }
+
+        .empty {
+            max-width: 760px;
+            margin: 40px auto;
+            padding: 18px;
+            border: 1px dashed #2a3e6e;
+            border-radius: 12px;
+            color: var(--muted);
+            text-align: center
+        }
+
+        /* Lightbox */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: #000b;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            backdrop-filter: blur(4px)
+        }
+
+        .lightbox.open {
+            display: flex
+        }
+
+        .lightbox img {
+            max-width: 92vw;
+            max-height: 82vh;
+            border-radius: 14px;
+            box-shadow: 0 24px 40px rgba(0, 0, 0, .6);
+            background: #0b1531;
+            object-fit: contain
+        }
+
+        .lb-controls {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px
+        }
+
+        .icon-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 999px;
+            border: 1px solid #2a3e6e;
+            background: #162249;
+            color: #fff;
+            display: grid;
+            place-items: center;
+            cursor: pointer
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <a href="index.html" style="color:#fff"><i class="fa-solid fa-chevron-left"></i></a>
+        <h1>Kyowavers Gallery</h1>
+        <div class="spacer"></div>
+        <button id="signinBtn" class="btn"><i class="fa-brands fa-google"></i> Sign in</button>
+        <button id="signoutBtn" class="btn" style="display:none">Sign out</button>
+    </header>
+
+    <div class="bar">
+        <div class="pill"><i class="fa-solid fa-folder-plus"></i>
+            <input id="newFolderName" type="text" placeholder="New folder name…" />
+            <button id="createFolderBtn">Create</button>
+        </div>
+        <div class="pill"><i class="fa-solid fa-cloud-arrow-up"></i>
+            <input id="fileInput" type="file" accept="image/*" />
+            <button id="uploadBtn">Upload</button>
+        </div>
+        <div class="pill" style="margin-left:auto"><i class="fa-solid fa-rotate"></i>
+            <button id="refreshBtn">Refresh</button>
+        </div>
+    </div>
+
+    <div id="tabs" class="tabs"></div>
+
+    <div id="grid" class="grid"></div>
+    <div id="status" class="loader" style="display:none">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <span>Loading…</span>
+    </div>
+    <div id="empty" class="empty" style="display:none">No images in this folder yet. Upload one to get started.</div>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox" aria-modal="true" role="dialog">
+        <img id="lbImg" alt="">
+        <div class="lb-controls">
+            <button class="icon-btn" id="prevBtn" title="Prev"><i class="fa-solid fa-chevron-left"></i></button>
+            <button class="icon-btn" id="nextBtn" title="Next"><i class="fa-solid fa-chevron-right"></i></button>
+            <a class="icon-btn" id="sourceBtn" title="Open in Drive" target="_blank" rel="noopener">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </a>
+            <button class="icon-btn" id="closeBtn" title="Close"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+    </div>
+
+ 
+
+    <div class="nav-container">
+        <ul class="nav">
+            <li class="nav-item" data-index="0"><a href="index.html"><span class="icon"><i
+                            class="fa-solid fa-house"></i></span><span class="text">Home</span></a></li>
+            <li class="nav-item" data-index="1"><a href="friends.html"><span class="icon"><i
+                            class="fa-solid fa-users"></i></span><span class="text">Friends</span></a></li>
+            <li class="nav-item" data-index="2"><a href="chat.html"><span class="icon"><i
+                            class="fa-solid fa-comment-dots"></i></span><span class="text">Chat</span></a></li>
+            <li class="nav-item" data-index="3"><a href="gallery.html"><span class="icon"><i
+                            class="fa-solid fa-camera"></i></span><span class="text">Gallery</span></a></li>
+            <li class="nav-item" data-index="4"><a href="schedule.html"><span class="icon"><i
+                            class="fa-solid fa-calendar"></i></span><span class="text">Schedule</span></a></li>
+            <div class="indicator"></div>
+        </ul>
+    </div>
+
+    <script>
+        const navItems = document.querySelectorAll('.nav-item');
+        const indicator = document.querySelector('.indicator');
+        navItems.forEach((item, i) => {
+            item.addEventListener('mouseenter', () => {
+                const moveX = i * 74;
+                indicator.style.transform = `translateX(${moveX}px)`;
+            });
+        });
+    </script>
+
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+        // ========= CONFIG =========
+        const CLIENT_ID = "YOUR_OAUTH_CLIENT_ID";
+        const SCOPES = "https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.readonly";
+
+        // ========= STATE =========
+        let accessToken = null;
+        let folders = []; // {id,name}
+        let activeFolderId = null;
+        let items = []; // images of active folder
+        let lbIndex = -1;
+
+        // ========= AUTH =========
+        let tokenClient;
+        window.onload = () => {
+            tokenClient = google.accounts.oauth2.initTokenClient({
+                client_id: CLIENT_ID,
+                scope: SCOPES,
+                callback: (resp) => {
+                    if (resp && resp.access_token) {
+                        accessToken = resp.access_token;
+                        document.getElementById('signinBtn').style.display = 'none';
+                        document.getElementById('signoutBtn').style.display = 'inline-block';
+                        bootstrap();
+                    }
+                }
+            });
+            document.getElementById('signinBtn').onclick = () => tokenClient.requestAccessToken({
+                prompt: 'consent'
+            });
+            document.getElementById('signoutBtn').onclick = () => {
+                accessToken = null;
+                google.accounts.oauth2.revoke(localStorage.getItem('g_user_hint') || '', () => {});
+                location.reload();
+            };
+
+            // actions
+            document.getElementById('createFolderBtn').onclick = createFolder;
+            document.getElementById('uploadBtn').onclick = uploadFile;
+            document.getElementById('refreshBtn').onclick = () => {
+                if (activeFolderId) loadImages(activeFolderId);
+            };
+        };
+
+        async function bootstrap() {
+            await loadFolders();
+            if (!activeFolderId && folders[0]) setActiveFolder(folders[0].id);
+        }
+
+        // ========= DRIVE HELPERS =========
+        async function driveGET(url) {
+            const res = await fetch(url, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            });
+            if (!res.ok) throw new Error(await res.text());
+            return res.json();
+        }
+        async function drivePOST(url, body, headers = {}) {
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    ...headers
+                },
+                body
+            });
+            if (!res.ok) throw new Error(await res.text());
+            return res.json();
+        }
+
+        // List folders we manage (filter: mimeType=folder, not trashed, name starts with Kyowavers- or all)
+        async function loadFolders() {
+            showLoading(true);
+            const q = encodeURIComponent("mimeType='application/vnd.google-apps.folder' and trashed=false");
+            const url =
+                `https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id,name)&pageSize=100&orderBy=modifiedTime desc`;
+            const data = await driveGET(url);
+            folders = data.files || [];
+            renderTabs();
+            showLoading(false);
+        }
+
+        function renderTabs() {
+            const tabs = document.getElementById('tabs');
+            tabs.innerHTML = '';
+            folders.forEach(f => {
+                const el = document.createElement('div');
+                el.className = 'tab' + (f.id === activeFolderId ? ' active' : '');
+                el.innerHTML = `<i class="fa-regular fa-folder"></i> <span>${escapeHtml(f.name)}</span>
+                        <i class="fa-solid fa-xmark close" title="Hide from tabs"></i>`;
+                el.onclick = (e) => {
+                    if (e.target.classList.contains('close')) {
+                        /* hide only in UI */
+                        el.remove();
+                        return;
+                    }
+                    setActiveFolder(f.id);
+                };
+                tabs.appendChild(el);
+            });
+        }
+
+        function setActiveFolder(id) {
+            activeFolderId = id;
+            renderTabs();
+            loadImages(id);
+        }
+
+        async function createFolder() {
+            const name = (document.getElementById('newFolderName').value || '').trim();
+            if (!name) return;
+            const meta = {
+                name,
+                mimeType: 'application/vnd.google-apps.folder'
+            };
+            const data = await drivePOST('https://www.googleapis.com/drive/v3/files',
+                JSON.stringify(meta), {
+                    'Content-Type': 'application/json'
+                }
+            );
+            document.getElementById('newFolderName').value = '';
+            folders.unshift({
+                id: data.id,
+                name
+            });
+            setActiveFolder(data.id);
+        }
+
+        async function loadImages(folderId) {
+            showLoading(true);
+            items = [];
+            const q = encodeURIComponent(
+                `'${folderId}' in parents and mimeType contains 'image/' and trashed=false`);
+            const url =
+                `https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id,name,webViewLink,createdTime)&pageSize=200&orderBy=createdTime desc`;
+            const data = await driveGET(url);
+            items = (data.files || []).map(f => ({
+                id: f.id,
+                name: f.name,
+                webViewLink: f.webViewLink,
+                src: `https://drive.google.com/uc?export=view&id=${f.id}`,
+                created: f.createdTime
+            }));
+            renderGrid();
+            showLoading(false);
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('grid');
+            const empty = document.getElementById('empty');
+            grid.innerHTML = '';
+            if (!items.length) {
+                empty.style.display = 'block';
+                return;
+            }
+            empty.style.display = 'none';
+            const frag = document.createDocumentFragment();
+            items.forEach((f, idx) => {
+                const fig = document.createElement('figure');
+                fig.className = 'item';
+                fig.innerHTML = `
+          <img loading="lazy" src="${f.src}" alt="${escapeHtml(f.name)}">
+          <figcaption class="meta">
+            <span><i class="fa-regular fa-image"></i> ${escapeHtml(f.name)}</span>
+            <span>${new Date(f.created).toLocaleDateString()}</span>
+          </figcaption>`;
+                fig.onclick = () => openLightbox(idx);
+                frag.appendChild(fig);
+            });
+            grid.appendChild(frag);
+        }
+
+        async function uploadFile() {
+            if (!activeFolderId) {
+                alert('Pick a folder tab first or create one.');
+                return;
+            }
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files && fileInput.files[0];
+            if (!file) {
+                alert('Choose an image first.');
+                return;
+            }
+
+            // multipart/related upload
+            const metadata = {
+                name: file.name,
+                parents: [activeFolderId],
+                mimeType: file.type || 'image/jpeg'
+            };
+            const boundary = '-------314159265358979323846';
+            const delimiter = `\r\n--${boundary}\r\n`;
+            const closeDelim = `\r\n--${boundary}--`;
+            const reader = await file.arrayBuffer();
+            const metaPart = `Content-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(metadata)}`;
+            const filePart = `Content-Type: ${metadata.mimeType}\r\n\r\n`;
+            const body = new Blob([
+                delimiter, metaPart,
+                delimiter, filePart, new Uint8Array(reader),
+                closeDelim
+            ], {
+                type: `multipart/related; boundary=${boundary}`
+            });
+
+            try {
+                showLoading(true);
+                await drivePOST('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', body, {
+                    'Content-Type': `multipart/related; boundary=${boundary}`
+                });
+                fileInput.value = '';
+                await loadImages(activeFolderId);
+            } catch (e) {
+                console.error(e);
+                alert('Upload failed. Check console for details.');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Lightbox
+        const lb = document.getElementById('lightbox');
+        const lbImg = document.getElementById('lbImg');
+        const sourceBtn = document.getElementById('sourceBtn');
+        document.getElementById('closeBtn').onclick = () => {
+            lb.classList.remove('open');
+            lbImg.src = '';
+            lbIndex = -1;
+        }
+        document.getElementById('prevBtn').onclick = () => nav(-1);
+        document.getElementById('nextBtn').onclick = () => nav(1);
+        lb.addEventListener('click', (e) => {
+            if (e.target === lb) {
+                lb.classList.remove('open');
+            }
+        });
+        window.addEventListener('keydown', e => {
+            if (!lb.classList.contains('open')) return;
+            if (e.key === 'Escape') lb.classList.remove('open');
+            if (e.key === 'ArrowRight') nav(1);
+            if (e.key === 'ArrowLeft') nav(-1);
+        });
+
+        function openLightbox(i) {
+            lbIndex = i;
+            const it = items[i];
+            lbImg.src = it.src;
+            lbImg.alt = it.name;
+            sourceBtn.href = it.webViewLink;
+            lb.classList.add('open');
+        }
+
+        function nav(delta) {
+            if (lbIndex < 0) return;
+            lbIndex = (lbIndex + delta + items.length) % items.length;
+            openLightbox(lbIndex);
+        }
+
+        // Utils
+        function showLoading(v) {
+            document.getElementById('status').style.display = v ? 'flex' : 'none';
+        }
+
+        function escapeHtml(s) {
+            return (s || '').replace(/[&<>"']/g, m => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            } [m]))
+        }
+    </script>
+</body>
+
+</html>

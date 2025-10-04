@@ -1,41 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Kyowavers</title>
-  <link rel="stylesheet" href="style.css"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kyowavers | Travel Squad</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/3f2c4e5f3a.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body>
   <header>
-    <h1>🌊 Kyowavers</h1>
-    <p>Exploring Japan. Talking to the world. Sharing the wave.</p>
+    <div class="header-container">
+      <img src="logo.jpeg" alt="Kyowavers Logo" class="logo" />
+      <div class="header-text">
+        <h1>Kyowavers</h1>
+        <p>Traveling Japan. Connecting Cultures. Sharing Waves.</p>
+      </div>
+    </div>
   </header>
 
   <main>
-    <section class="intro">
-      <h2>About Us</h2>
-      <p>We are a group of friends traveling across Kyoto and Japan, connecting with foreigners, sharing smiles, and collecting stories. Our mission? Spread culture, make memories, and ride the wave together.</p>
-    </section>
+    <main>
 
-    <section class="gallery">
-      <h2>📸 Trip Photos</h2>
-      <p>We store our travel photos on <a href="https://drive.google.com/" target="_blank">Google Drive</a> so the whole team can access anytime.</p>
-    </section>
+      <!-- Hero Section -->
+      <section class="hero">
+        <!-- 🌅 Split Hero with Image Left + Interactive Cards Right -->
+        <div class="split-hero">
+          <!-- Left side image with text -->
+          <div class="hero-image">
+            <div class="hero-text">
+              <h1>Get ready</h1>
+              <p>collection of the most beautiful places and experience</p>
+              <button class="start-btn">Get Started</button>
+              <div class="step-indicator">01 / 04</div>
+            </div>
+          </div>
 
-    <section class="schedule">
-      <h2>📅 Team Schedule</h2>
-      <p>Want to plan the next trip? Check the <a href="https://calendar.google.com/" target="_blank">Google Calendar</a> to see when the team is free!</p>
-    </section>
+          <!-- Right side cards -->
+          <div class="card-carousel">
+            <div class="card-track">
+              <div class="card active">
+                <h3>Experience</h3>
+                <p>Talks with travelers in Kyoto and Osaka</p>
+              </div>
+              <div class="card second-card">
+                <img src="https://cdn.pixabay.com/photo/2017/01/20/00/30/beach-1990261_960_720.jpg" alt="Travel Image" class="card-img" />
+                <p>Travel Moments</p>
+              </div>
+              <div class="card">
+                <h3>Places</h3>
+                <p>Hidden gems you’ll want to visit again</p>
+              </div>
+              <div class="card">
+                <h3>Housing</h3>
+                <p>Budget-friendly stays with cozy vibes</p>
+              </div>
+              <div class="card">
+                <h3>Places</h3>
+                <p>Hidden gems you’ll want to visit again</p>
+              </div>
+              <div class="card">
+                <h3>Housing</h3>
+                <p>Budget-friendly stays with cozy vibes</p>
+              </div>
+              <div class="card">
+                <h3>Team</h3>
+                <p>Our Kyowavers crew from all over Japan</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-    <section class="connect">
-      <h2>🗣️ Stay Connected</h2>
-      <p>Join our <a href="https://line.me/en/" target="_blank">LINE group</a> to chat, share updates, and drop pin locations!</p>
-    </section>
+
+
+      <script>
+        // Auto-highlight first card on scroll center
+        const cards = document.querySelectorAll('.card');
+        document.querySelector('.card-carousel').addEventListener('scroll', () => {
+          cards.forEach((card) => card.classList.remove('active'));
+          const center = window.innerWidth / 2;
+          cards.forEach((card) => {
+            const rect = card.getBoundingClientRect();
+            const cardCenter = rect.left + rect.width / 2;
+            if (Math.abs(cardCenter - center) < 100) {
+              card.classList.add('active');
+            }
+          });
+        });
+      </script>
+
+
+
+
+
+
+    </main>
   </main>
 
   <footer>
-    <p>© 2025 Kyowavers. Built with ❤️ by the team.</p>
+    <p>© 2025 Kyowavers · Made with 💙 for unity & culture.</p>
   </footer>
+
+  <div class="nav-container">
+    <ul class="nav">
+      <li class="nav-item" data-index="0">
+        <a href="index.html">
+          <span class="icon"><i class="fa-solid fa-house"></i></span>
+          <span class="text">Home</span>
+        </a>
+      </li>
+      <li class="nav-item" data-index="1">
+        <a href="friends.html">
+          <span class="icon"><i class="fa-solid fa-users"></i></span>
+          <span class="text">Friends</span>
+        </a>
+      </li>
+      <li class="nav-item" data-index="2">
+        <a href="chat.html">
+          <span class="icon"><i class="fa-solid fa-comment-dots"></i></span>
+          <span class="text">Chat</span>
+        </a>
+      </li>
+      <li class="nav-item" data-index="3">
+        <a href="gallery.html">
+          <span class="icon"><i class="fa-solid fa-camera"></i></span>
+          <span class="text">Gallery</span>
+        </a>
+      </li>
+      <li class="nav-item" data-index="4">
+        <a href="schedule.html">
+          <span class="icon"><i class="fa-solid fa-calendar"></i></span>
+          <span class="text">Schedule</span>
+        </a>
+      </li>
+      <div class="indicator"></div>
+    </ul>
+  </div>
+
+  <script>
+    const navItems = document.querySelectorAll('.nav-item');
+    const indicator = document.querySelector('.indicator');
+
+    navItems.forEach((item, i) => {
+      item.addEventListener('mouseenter', () => {
+        const moveX = i * 74;
+        indicator.style.transform = `translateX(${moveX}px)`;
+      });
+    });
+  </script>
 </body>
+
 </html>
